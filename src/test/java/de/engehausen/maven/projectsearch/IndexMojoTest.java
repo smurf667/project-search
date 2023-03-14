@@ -24,7 +24,7 @@ class IndexMojoTest extends AbstractMojoTest {
 			"-Droot=" + root.getAbsolutePath());
 		processBuilder.directory(root);
 		runAndCheckOutput(processBuilder,
-			"building index for",
+			"Building index for",
 			".testindex",
 			"into",
 			root.getAbsolutePath());

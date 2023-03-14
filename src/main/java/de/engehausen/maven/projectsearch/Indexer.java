@@ -80,7 +80,7 @@ public class Indexer implements FileVisitor<Path> {
 			try (final Directory directory = FSDirectory.open(indexPath)) {
 				indexWriter = new IndexWriter(directory, new IndexWriterConfig(new CaseSensitiveAnalyzer()));
 				try {
-					log.info(String.format("building index for %s into %s", rootFolder, indexPath));
+					log.info(String.format("Building index for %s into %s", rootFolder, indexPath));
 					Files.walkFileTree(rootFolder, this);
 				} finally {
 					indexWriter.close();

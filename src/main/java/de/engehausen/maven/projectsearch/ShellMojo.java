@@ -38,7 +38,7 @@ public class ShellMojo extends AbstractSearchMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
 			final Path indexPath = getIndex(root, indexFolder);
-			if (!Files.exists(indexPath)) {
+			if (clean || !Files.exists(indexPath)) {
 				final Indexer indexer = new Indexer(
 					rootFolder,
 					indexPath,

@@ -86,7 +86,7 @@ public class SearchMojo extends AbstractSearchMojo {
 				loadPresetQuery();
 			}
 			final Path indexPath = getIndex(root, indexFolder);
-			if (!Files.exists(indexPath)) {
+			if (clean || !Files.exists(indexPath)) {
 				final Indexer indexer = new Indexer(
 					rootFolder,
 					indexPath,
@@ -100,7 +100,7 @@ public class SearchMojo extends AbstractSearchMojo {
 				final IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(directory));
 				final TopDocs topDocs = searcher.search(new QueryParser(Constants.FIELD_CONTENTS, new CaseSensitiveAnalyzer()).parse(query), MAX);
 				final Deque<String> ignored = new ArrayDeque<>();
-				final String rootFolderAbsolute = rootFolder.toAbsolutePath().toString();
+				final Path rootFolderAbsolute = rootFolder.toAbsolutePath();
 				final List<String> hits = Arrays.stream(topDocs.scoreDocs)
 					.map(scoreDoc -> {
 						try {
@@ -110,7 +110,7 @@ public class SearchMojo extends AbstractSearchMojo {
 						}
 					})
 					.filter(Objects::nonNull)
-					.map(document -> String.format("%s%s%s%s%s", rootFolderAbsolute, File.separatorChar, document.get(Constants.FIELD_PATH), File.separatorChar, document.get(Constants.FIELD_FILENAME)))
+					.map(document -> rootFolderAbsolute.resolve(document.get(Constants.FIELD_PATH)).resolve(document.get(Constants.FIELD_FILENAME)).toString())
 					.filter(str -> accepted(str, ignored))
 					.sorted()
 					.collect(Collectors.toList());
